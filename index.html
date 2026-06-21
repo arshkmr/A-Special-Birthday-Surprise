@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Birthday Surprise Awaits You</title>
+  <meta name="description" content="A magical, interactive, and emotionally-driven birthday surprise experience.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Sacramento&display=swap"
+    rel="stylesheet">
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Background Music Element -->
+  <audio id="bg-music" loop preload="auto"></audio>
+
+  <!-- Global Audio Control Button (hidden initially) -->
+  <button id="music-toggle" class="music-toggle-btn hidden" aria-label="Toggle Music">
+    <svg class="icon-play" viewBox="0 0 24 24" width="24" height="24">
+      <path fill="currentColor" d="M8 5v14l11-7z" />
+    </svg>
+    <svg class="icon-mute hidden" viewBox="0 0 24 24" width="24" height="24">
+      <path fill="currentColor"
+        d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM12 4L9.91 6.09 12 8.18V4zm-6.41 1.7L4.5 6.78 7.72 10H3v4h4.72l5.28 5.28V14.78l3.72 3.72c-.62.46-1.31.81-2.07 1.01v2.05c1.3-.3 2.45-.97 3.39-1.87l2.19 2.19 1.41-1.41L5.59 5.7z" />
+    </svg>
+  </button>
+
+  <!-- Global Particle Background Layer -->
+  <div id="particle-container"></div>
+
+  <!-- Main Multi-Section Container -->
+  <main id="story-container">
+
+    <!-- =================================================
+         SECTION 1: PASSWORD GATE
+         ================================================= -->
+    <section id="section-password" class="story-section active">
+      <div class="split-layout">
+        <!-- Left Side: Interactive Polaroid -->
+        <div class="split-left">
+          <div class="polaroid-wrapper">
+            <div class="polaroid-pin">🎀</div>
+            <div class="polaroid-card">
+              <div class="polaroid-img-container">
+                <img id="polaroid-img" src="" alt="Birthday Girl Memory">
+                <div class="polaroid-glare"></div>
+              </div>
+              <div class="polaroid-caption" id="polaroid-text">Happy Birthday! Babe</div>
+            </div>
+            <!-- Floating soft hearts within the Polaroid side -->
+            <div class="local-hearts"></div>
+          </div>
+        </div>
+
+        <!-- Right Side: Luxury Glassmorphism Passcode Safe -->
+        <div class="split-right">
+          <div class="glass-card passcode-card" id="passcode-container">
+            <div class="lock-icon-wrapper">
+              <svg id="lock-icon" class="lock-svg" viewBox="0 0 24 24" width="48" height="48">
+                <!-- Locked Path -->
+                <path class="lock-shackle" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                  d="M7 11V7a5 5 0 0 1 10 0v4" />
+                <rect class="lock-body" x="4" y="11" width="16" height="11" rx="2" fill="currentColor" />
+                <circle class="lock-keyhole" cx="12" cy="16" r="1.5" fill="var(--color-bg)" />
+              </svg>
+            </div>
+
+            <h1 class="gate-title">A Special Birthday Surprise Awaits You</h1>
+            <p class="gate-subtitle">Enter the secret key to unlock your story</p>
+
+            <!-- Code dots representation -->
+            <div class="passcode-dots-container">
+              <div class="code-dot"></div>
+              <div class="code-dot"></div>
+              <div class="code-dot"></div>
+              <div class="code-dot"></div>
+              <div class="code-dot"></div>
+              <div class="code-dot"></div>
+              <div class="code-dot"></div>
+              <div class="code-dot"></div>
+            </div>
+
+            <!-- Passcode Keypad Grid -->
+            <div class="keypad-grid">
+              <button class="key-btn" data-key="1">1</button>
+              <button class="key-btn" data-key="2">2</button>
+              <button class="key-btn" data-key="3">3</button>
+              <button class="key-btn" data-key="4">4</button>
+              <button class="key-btn" data-key="5">5</button>
+              <button class="key-btn" data-key="6">6</button>
+              <button class="key-btn" data-key="7">7</button>
+              <button class="key-btn" data-key="8">8</button>
+              <button class="key-btn" data-key="9">9</button>
+              <button class="key-btn utility-btn" data-key="clear">CLR</button>
+              <button class="key-btn" data-key="0">0</button>
+              <button class="key-btn utility-btn" data-key="backspace">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
+                  <line x1="18" y1="9" x2="12" y2="15" />
+                  <line x1="12" y1="9" x2="18" y2="15" />
+                </svg>
+              </button>
+            </div>
+
+            <div id="password-error" class="error-msg hidden">Shh... That's not the secret code. Try again!</div>
+          </div>
+
+          <!-- Age stats revealed (Smoothly fades in inside the right panel once password is correct) -->
+          <div class="glass-card stats-card hidden" id="stats-container">
+            <h2>Access Granted ✨</h2>
+            <p class="stats-intro">Analyzing your timeline of beauty, laughter, and grace...</p>
+            <div class="dob-display">DOB: <span id="stat-dob-val">03 / 08 / 1994</span></div>
+            <div class="age-main"><span id="stat-age-years">0</span> Years of Sparkle</div>
+
+            <div class="stats-grid">
+              <div class="stat-box">
+                <span class="stat-num" id="stat-months">0</span>
+                <span class="stat-label">Months</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="stat-days">0</span>
+                <span class="stat-label">Days</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="stat-hours">0</span>
+                <span class="stat-label">Hours</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-num" id="stat-minutes">0</span>
+                <span class="stat-label">Minutes</span>
+              </div>
+              <div class="stat-box full-width">
+                <span class="stat-num" id="stat-seconds">0</span>
+                <span class="stat-label">Seconds &amp; Counting</span>
+              </div>
+            </div>
+
+            <button id="btn-proceed-loader" class="action-btn glow-btn">Enter Your Surprise</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 2: LOADER EXPERIENCE
+         ================================================= -->
+    <section id="section-loader" class="story-section">
+      <div class="loader-content">
+        <div class="loader-gift-emoji">🎁</div>
+        <div id="loader-phrase" class="loader-phrase">Hey Gurl...</div>
+        <div class="progress-bar-container">
+          <div id="loader-progress" class="progress-bar-fill"></div>
+        </div>
+        <div class="loader-status">Gathering magical moments...</div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 3: GRAND BIRTHDAY REVEAL
+         ================================================= -->
+    <section id="section-reveal" class="story-section">
+      <div class="reveal-content text-center">
+        <div id="reveal-date-badge" class="date-badge">03 / 08 / 1994</div>
+        <h1 id="reveal-title" class="reveal-title"></h1>
+        <p id="reveal-subtitle" class="reveal-subtitle">Today Is All About You</p>
+        <div class="scroll-prompt-wrapper">
+          <button id="btn-proceed-envelope" class="action-btn bubble-btn">Click to Open Envelope</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 4: INTERACTIVE ENVELOPE
+         ================================================= -->
+    <section id="section-envelope" class="story-section">
+      <div class="envelope-container">
+        <h2 class="envelope-header-text">Happy Birthday! <span id="envelope-name-span">Babe</span></h2>
+
+        <div class="envelope-wrapper" id="envelope-wrapper">
+          <div class="envelope">
+            <div class="envelope-back"></div>
+            <div class="envelope-letter" id="envelope-letter-card">
+              <div class="mini-card-text">
+                <span class="heart-symbol">❤️</span>
+                <p>A secret note is tucked inside just for you...</p>
+              </div>
+            </div>
+            <div class="envelope-front"></div>
+            <div class="envelope-top-flap"></div>
+            <div class="envelope-seal" id="envelope-seal"></div>
+          </div>
+        </div>
+
+        <div id="envelope-instruction" class="envelope-instruction">
+          Click the gold seal to open the letter
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 5: FULL SCREEN MEMORY IMAGE
+         ================================================= -->
+    <section id="section-memory" class="story-section">
+      <div class="memory-full-overlay">
+        <div class="memory-top-date" id="memory-top-date-val">03 / 08 / 1994</div>
+
+        <div class="memory-frame-wrapper">
+          <div class="memory-polaroid-frame">
+            <img id="memory-img" src="" alt="Heartfelt Memory">
+          </div>
+        </div>
+
+        <div class="memory-bottom-content">
+          <h2 id="memory-text-title" class="memory-heading">Happy Birthday Mam</h2>
+          <blockquote id="memory-quote-val" class="memory-quote">
+            “In the garden of my life, you are the most beautiful flower...”
+          </blockquote>
+          <button id="btn-proceed-letter" class="action-btn letter-cta-btn">Open My Letter</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 6: LOVE LETTER EXPERIENCE
+         ================================================= -->
+    <section id="section-letter" class="story-section">
+      <div class="letter-stage">
+
+        <!-- Letter Package with tied ribbon -->
+        <div id="letter-package" class="letter-package">
+          <!-- Envelope Back Background -->
+          <div class="envelope-back-bg"></div>
+
+          <!-- Envelope Flaps for 3D unfold -->
+          <div class="envelope-flap flap-left"></div>
+          <div class="envelope-flap flap-right"></div>
+          <div class="envelope-flap flap-top"></div>
+          <div class="envelope-flap flap-bottom"></div>
+
+          <!-- Ribbons that slide off -->
+          <div class="ribbon-vertical-half ribbon-v-top"></div>
+          <div class="ribbon-vertical-half ribbon-v-bottom"></div>
+          <div class="ribbon-horizontal-half ribbon-h-left"></div>
+          <div class="ribbon-horizontal-half ribbon-h-right"></div>
+
+          <!-- Wax Seal -->
+          <div class="wax-seal" id="wax-seal">
+            <div class="seal-half seal-left">
+              <div class="seal-inner">❤️</div>
+            </div>
+            <div class="seal-half seal-right">
+              <div class="seal-inner">❤️</div>
+            </div>
+          </div>
+
+          <div class="unfold-hint">Click the seal to untie &amp; read</div>
+        </div>
+
+        <!-- The actual unfolds paper note -->
+        <div id="paper-letter" class="paper-letter hidden-initial">
+          <div class="letter-paper-content">
+            <div class="letter-photo-frame">
+              <img id="letter-photo-img" src="" alt="Cherished Moment">
+            </div>
+            <div class="letter-text-content">
+              <h3 id="letter-greet" class="letter-greeting">My Dearest Golu Molu,</h3>
+              <div id="letter-body-paragraphs" class="letter-body">
+                <!-- Injected via JavaScript -->
+              </div>
+              <p id="letter-close" class="letter-closing">With all my love,</p>
+              <p id="letter-sig" class="letter-signature">Forever Yours ❤️</p>
+            </div>
+          </div>
+          <div class="letter-actions">
+            <button id="btn-proceed-cake" class="action-btn cake-cta-btn">Let's Blow the Candles! 🎂</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 7: BIRTHDAY CAKE
+         ================================================= -->
+    <section id="section-cake" class="story-section">
+      <div class="cake-layout">
+        <h1 class="cake-title" id="cake-heading-val">Make A Wish</h1>
+
+        <div class="wish-timer-badge hidden">
+          <span class="timer-icon">⏳</span>
+          <span id="wish-countdown-number" class="timer-num">15</span>s
+        </div>
+
+        <!-- Animated Cake Vector Representation -->
+        <div class="cake-container">
+          <div class="cake-glow"></div>
+          <div class="cake">
+            <div class="cake-layer layer-bottom"></div>
+            <div class="cake-layer layer-middle"></div>
+            <div class="cake-layer layer-top"></div>
+            <div class="cake-icing"></div>
+            <div class="candles-wrapper">
+              <!-- Candles injected dynamically by JS -->
+              <div class="candle" id="candle-1" data-blown="false">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle-2" data-blown="false">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle-3" data-blown="false">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle-4" data-blown="false">
+                <div class="flame"></div>
+              </div>
+              <div class="candle" id="candle-5" data-blown="false">
+                <div class="flame"></div>
+              </div>
+            </div>
+          </div>
+          <div class="cake-stand"></div>
+        </div>
+
+        <p class="cake-instruction">Click on each flame to blow out the candles!</p>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 8: GRAND FINALE
+         ================================================= -->
+    <section id="section-finale" class="story-section">
+      <canvas id="finale-ribbon-canvas"></canvas>
+      <!-- Full-screen interactive canvas for fireworks / confetti -->
+
+      <div class="finale-content text-center">
+        <div id="finale-phrase-container" class="finale-phrase-container">
+          <h1 id="finale-main-phrase" class="finale-text fade-in-out">May All Your Wishes Come True 🌠</h1>
+        </div>
+
+        <button id="btn-proceed-ending" class="action-btn next-arrow-btn hidden" aria-label="Cinematic Ending">
+          <svg viewBox="0 0 24 24" width="36" height="36">
+            <path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SECTION 9: CINEMATIC ENDING
+         ================================================= -->
+    <section id="section-ending" class="story-section">
+      <div class="ending-credits text-center">
+        <div class="credits-logo">❤️</div>
+        <h1 class="credits-made-with">Made With Love</h1>
+        <p class="credits-forever-wishing">Forever Wishing The Best For You</p>
+
+        <div class="ending-actions">
+          <button id="btn-restart" class="restart-btn">Relive The Story</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- External JS configuration and engine files -->
+  <script src="config.js?v=2"></script>
+  <script src="script.js?v=2"></script>
+</body>
+
+</html>
