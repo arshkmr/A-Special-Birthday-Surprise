@@ -971,7 +971,7 @@ body {
   border-radius: 4px;
   transform: rotate(1.5deg);
   max-width: 90%;
-  width: 440px;
+  width: 320px;
   transition: var(--transition-smooth);
 }
 
