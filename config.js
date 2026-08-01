@@ -16,7 +16,7 @@ const CONFIG = {
   images: {
     polaroidPlaceholder: "assets/Image 1.jpg", // Image for the password page polaroid
     memoryImage: "assets/Image 2.jpg", // Large full-screen memory image
-    letterPhoto: "assets/Image 1.jpg", // Small photo inside the love letter
+    letterPhoto: "assets/Image 3.PNG", // Small photo inside the love letter
   },
 
   // Audio / Music Settings
@@ -91,6 +91,7 @@ const CONFIG = {
     "🏡 You're Not Just Special to Me, You're Home.",
     "🫂 No Matter What Happens, I'll Always Need You in My Life.",
     "💞 Some Bonds Are Forever... I Hope Ours Is One of Them.",
+    "🥹 And... Please Don't Cry After Reading This. Your Smile Is My Favorite Part. ❤️",
     "🌸 Thank You for Being My Family, My Safe Place, and My Greatest Blessing.",
   ],
 };

@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     activeCanvas: false,
     timerCount: 15,
     musicPlaying: false,
+    wrongAttempts: 0,
   };
 
   // DOM Cache
@@ -17,6 +18,78 @@ document.addEventListener("DOMContentLoaded", () => {
   const iconPlay = musicToggle.querySelector(".icon-play");
   const iconMute = musicToggle.querySelector(".icon-mute");
   const particleContainer = document.getElementById("particle-container");
+
+  // Hint Modal Cache
+  const hintModal = document.getElementById("hint-modal");
+  const hintModalTitle = document.getElementById("hint-modal-title");
+  const hintModalBody = document.getElementById("hint-modal-body");
+  const hintModalEmoji = document.getElementById("hint-modal-emoji");
+  const hintModalBtn = document.getElementById("hint-modal-btn");
+  const hintModalCloseIcon = document.getElementById("hint-modal-close-icon");
+
+  if (hintModalBtn) {
+    hintModalBtn.addEventListener("click", hideHintModal);
+  }
+  if (hintModalCloseIcon) {
+    hintModalCloseIcon.addEventListener("click", hideHintModal);
+  }
+  if (hintModal) {
+    hintModal.addEventListener("click", (e) => {
+      if (e.target === hintModal) {
+        hideHintModal();
+      }
+    });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (
+      e.key === "Escape" &&
+      hintModal &&
+      !hintModal.classList.contains("hidden")
+    ) {
+      hideHintModal();
+    }
+  });
+
+  function showHintModal(attemptCount) {
+    if (!hintModal) return;
+
+    if (attemptCount === 1) {
+      if (hintModalEmoji) hintModalEmoji.textContent = "💡";
+      if (hintModalTitle) hintModalTitle.textContent = "Secret Hint #1 💡";
+      if (hintModalBody) {
+        hintModalBody.innerHTML = `First Hint 💡: The passcode is something that feels special only once every year. 🎂`;
+      }
+      if (hintModalBtn) hintModalBtn.textContent = "Unlock the Secret 🔐";
+    } else {
+      if (hintModalEmoji) hintModalEmoji.textContent = "💖";
+      if (hintModalTitle) hintModalTitle.textContent = "Final Hint #2 💖";
+      if (hintModalBody) {
+        hintModalBody.innerHTML = `
+        Every beautiful story has a beginning...<br>
+        Yours began on the day you were born. 🎂<br><br>
+        <span class="highlight-passcode">${state.config.passcode}</span><br>
+        <small>(DDMMYYYY Format)</small><br><br>
+        Now unlock your surprise! ✨
+        `;
+      }
+      if (hintModalBtn) hintModalBtn.textContent = "Unlock My Surprise 🎁";
+    }
+
+    playHintSound();
+
+    hintModal.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      hintModal.classList.add("active");
+    });
+  }
+
+  function hideHintModal() {
+    if (!hintModal) return;
+    hintModal.classList.remove("active");
+    setTimeout(() => {
+      hintModal.classList.add("hidden");
+    }, 350);
+  }
 
   // Section cache
   const secPassword = document.getElementById("section-password");
@@ -196,6 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function verifyPasscode() {
     if (state.currentPasscode === state.config.passcode) {
       // SUCCESS ANIMATION
+      hideHintModal();
       passcodeContainer.classList.add("unlocked");
       playSuccessSound();
 
@@ -224,6 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 1000);
     } else {
       // WRONG PASSWORD - SHAKE CARD
+      state.wrongAttempts = (state.wrongAttempts || 0) + 1;
       passcodeContainer.classList.add("shake");
       playErrorSound();
       errorMsg.classList.remove("hidden");
@@ -233,6 +308,9 @@ document.addEventListener("DOMContentLoaded", () => {
         passcodeContainer.classList.remove("shake");
         state.currentPasscode = "";
         codeDots.forEach((dot) => dot.classList.remove("filled"));
+
+        // Show popup hint on wrong attempt
+        showHintModal(state.wrongAttempts);
       }, 600);
     }
   }
@@ -363,6 +441,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
       osc.start();
       osc.stop(ctx.currentTime + 0.3);
+    } catch (e) {}
+  }
+
+  function playHintSound() {
+    try {
+      const ctx = getAudioContext();
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.frequency.setValueAtTime(659.25, ctx.currentTime); // E5
+      gain1.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc1.start();
+      osc1.stop(ctx.currentTime + 0.25);
+
+      setTimeout(() => {
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.frequency.setValueAtTime(880.0, ctx.currentTime); // A5
+        gain2.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+        osc2.start();
+        osc2.stop(ctx.currentTime + 0.35);
+      }, 100);
     } catch (e) {}
   }
 
@@ -503,10 +608,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // SECTION 3: GRAND REVEAL LOGIC
   // ==========================================================================
   function startRevealSequence() {
-    // Reveal birthday badge date
-    const formattedDate = formatDOB(state.config.dob);
-    document.getElementById("reveal-date-badge").textContent = formattedDate;
-
     // Inject heading text letter by letter
     const headingVal = state.config.birthdayHeading;
     const titleEl = document.getElementById("reveal-title");
@@ -551,7 +652,6 @@ document.addEventListener("DOMContentLoaded", () => {
       // Slide letter paper up, wait, then trigger transitions automatically!
       setTimeout(() => {
         transitionTo(secEnvelope, secMemory);
-        loadMemorySection();
       }, 2500);
     }
   });
@@ -559,12 +659,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
   // SECTION 5: MEMORY REVEAL LOGIC
   // ==========================================================================
-  function loadMemorySection() {
-    document.getElementById("memory-top-date-val").textContent = formatDOB(
-      state.config.dob,
-    );
-  }
-
   document
     .getElementById("btn-proceed-letter")
     .addEventListener("click", () => {
@@ -1128,6 +1222,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-restart").addEventListener("click", () => {
     // Reset variables
     state.currentPasscode = "";
+    state.wrongAttempts = 0;
+    hideHintModal();
     codeDots.forEach((dot) => dot.classList.remove("filled"));
 
     // Reset active panels

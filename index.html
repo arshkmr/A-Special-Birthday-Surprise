@@ -170,7 +170,6 @@
          ================================================= -->
     <section id="section-reveal" class="story-section">
       <div class="reveal-content text-center">
-        <div id="reveal-date-badge" class="date-badge">03 / 08 / 1994</div>
         <h1 id="reveal-title" class="reveal-title"></h1>
         <p id="reveal-subtitle" class="reveal-subtitle">Today Is All About You</p>
         <div class="scroll-prompt-wrapper">
@@ -212,8 +211,6 @@
          ================================================= -->
     <section id="section-memory" class="story-section">
       <div class="memory-full-overlay">
-        <div class="memory-top-date" id="memory-top-date-val">03 / 08 / 1994</div>
-
         <div class="memory-frame-wrapper">
           <div class="memory-polaroid-frame">
             <img id="memory-img" src="" alt="Heartfelt Memory">
@@ -371,6 +368,21 @@
     </section>
 
   </main>
+
+  <!-- Passcode Popup Hint Modal -->
+  <div id="hint-modal" class="hint-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="hint-modal-title">
+    <div class="hint-modal-card glass-card">
+      <button id="hint-modal-close-icon" class="hint-modal-close-icon" aria-label="Close Hint">&times;</button>
+      <div class="hint-modal-icon-wrapper">
+        <span id="hint-modal-emoji" class="hint-modal-emoji">💡</span>
+      </div>
+      <h3 id="hint-modal-title" class="hint-modal-title">Secret Hint ✨</h3>
+      <p id="hint-modal-body" class="hint-modal-body"></p>
+      <div class="hint-modal-footer">
+        <button id="hint-modal-btn" class="action-btn glow-btn hint-btn">Try Again 💖</button>
+      </div>
+    </div>
+  </div>
 
   <!-- External JS configuration and engine files -->
   <script src="config.js?v=2"></script>
